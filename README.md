@@ -18,6 +18,6 @@ The script `wiki_crawler.py` is intended for crawling wikis in search of various
 
 `require`: Text that must be present in URLs in order for them to be Q'd by the crawler
 
-`exclude`: Text in URLs that will disqualify them from crawling
+`exclude`: Text in URLs that will disqualify them from crawling.  If this is empty, set it to a space or sth that will not come up because an empty string will match all URLs.
 
 
