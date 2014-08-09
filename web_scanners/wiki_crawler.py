@@ -7,11 +7,16 @@ import time
 #      CONFIGURATION                 #
 ######################################
 domain = "rationalwiki.org"
+entry = "RationalWiki:Saloon_bar"
+search_terms = ["atheism","rational","the","rape","christian","religion"]
+require = ""
+exclude = ""
 
 #####################################
 
 def web_r(url_frag):
-	w_req = requests.get("http://"+ domain +""+ url_frag )
+	reqHeaders = {"User-Agent":"AKULA SOKOLOVSKAYA: sokolovskaya.akula.sturmkrieg.ru"}
+	w_req = requests.get("http://"+ domain +""+ url_frag +"", headers=reqHeaders )
 	return w_req
 
 def get_links(response):
@@ -29,7 +34,7 @@ def msanititize(l_list):
 			n_list.append(link)
 	return n_list
 
-req = web_r("/wiki/RationalWiki:Saloon_bar")
+req = web_r("/wiki/"+ entry)
 res = req.text
 res = BeautifulSoup(res)
 links = get_links(res)
@@ -37,6 +42,7 @@ links = msanititize(links)
 print links
 all_links = []
 all_links.append(links)
+alert_count = [0] * len(search_terms)
 runs = 0
 
 for cycle in all_links:
@@ -50,14 +56,13 @@ for cycle in all_links:
 		links = get_links(res)
 		links = msanititize(links)
 		all_links.append(links)
+		for text in res.find_all('p'):
+			for term in search_terms:
+				if term in text.get_text():
+					alert_count[search_terms.index(term)] = alert_count[search_terms.index(term)] + 1
+		for term in search_terms:
+			print ""+ term +" count = "+ str(alert_count[search_terms.index(term)]) 
 		time.sleep(1)
-
-	#req = web_r(all_links[runs[0]])
-	#res = req.text
-	#res = BeautifulSoup(res)
-	#links = get_links(res)
-	#links = msanititize(links)
-	#print links
 	runs = runs + 1
 	time.sleep(1)
 
