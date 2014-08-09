@@ -10,7 +10,7 @@ domain = "rationalwiki.org"
 entry = "RationalWiki:Saloon_bar"
 search_terms = ["atheism","rational","the","rape","christian","religion"]
 require = ""
-exclude = ""
+exclude = " "
 
 #####################################
 
@@ -23,7 +23,7 @@ def get_links(response):
 	page_links = []
 	for a in response.find_all('a'):
 		href = a.get('href', '')
-		if href.startswith('/wiki'):
+		if href.startswith('/wiki') and exclude.lower() not in href.lower() and require.lower() in href.lower():
 			page_links.append(href)
 	return page_links
 
@@ -58,7 +58,7 @@ for cycle in all_links:
 		all_links.append(links)
 		for text in res.find_all('p'):
 			for term in search_terms:
-				if term in text.get_text():
+				if term.lower() in text.get_text().lower():
 					alert_count[search_terms.index(term)] = alert_count[search_terms.index(term)] + 1
 		for term in search_terms:
 			print ""+ term +" count = "+ str(alert_count[search_terms.index(term)]) 
