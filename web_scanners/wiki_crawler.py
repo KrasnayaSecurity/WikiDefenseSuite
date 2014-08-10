@@ -9,9 +9,9 @@ import time
 ######################################
 domain = "rationalwiki.org"
 entry = "RationalWiki:Saloon_bar"
-search_terms = ["atheism","rational","the","rape","christian","religion"]
+search_terms = ["nazi","ehrenstein","rape","arcane","dondrekhan"]
 require = ""
-exclude = " "
+exclude = "archive"
 
 #####################################
 
@@ -54,10 +54,12 @@ for cycle in all_links:
 		res = req.text
 		res = BeautifulSoup(res)
 		for text in res.find_all("h1"):
-			print text.get_text()
+			print "\n----------------------------------------------------------------------"+ text.get_text()
 		links = get_links(res)
 		links = msanititize(links)
 		all_links.append(links)
+		for text in res.find_all(id="content"):
+			print ""+ text.get_text() +"\n"
 		for text in res.find_all('p'):
 			for term in search_terms:
 				if term.lower() in text.get_text().lower():
