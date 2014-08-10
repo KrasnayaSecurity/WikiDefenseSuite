@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 from bs4 import BeautifulSoup
 import requests
 import time
@@ -39,10 +40,11 @@ res = req.text
 res = BeautifulSoup(res)
 links = get_links(res)
 links = msanititize(links)
-print links
+#print links
 all_links = []
 all_links.append(links)
 alert_count = [0] * len(search_terms)
+hasAlert = False
 runs = 0
 
 for cycle in all_links:
@@ -60,8 +62,23 @@ for cycle in all_links:
 			for term in search_terms:
 				if term.lower() in text.get_text().lower():
 					alert_count[search_terms.index(term)] = alert_count[search_terms.index(term)] + 1
+		file = open("WikiCrawl_log.txt", 'a')
+		file.write("\n\n"+ link +"\n")
 		for term in search_terms:
-			print ""+ term +" count = "+ str(alert_count[search_terms.index(term)]) 
+			print ""+ term +" count = "+ str(alert_count[search_terms.index(term)])
+			file.write(""+ term +" count = "+ str(alert_count[search_terms.index(term)]) +"\n")
+		for text in res.find_all('p'):
+			for term in search_terms:
+				if term.lower() in text.get_text().lower():
+					hasAlert = True
+		if hasAlert == True:
+			alert_r = web_r(link +"?action=raw")
+			alert_r = alert_r.content
+			file.write(""+ alert_r +"\n")
+		file.close()
+		for i in alert_count:
+			alert_count[alert_count.index(i)] = 0
+		hasAlert = False
 		time.sleep(1)
 	runs = runs + 1
 	time.sleep(1)
