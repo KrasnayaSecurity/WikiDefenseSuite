@@ -60,7 +60,7 @@ for cycle in all_links:
 		all_links.append(links)
 		for text in res.find_all(id="content"):
 			print ""+ text.get_text() +"\n"
-		for text in res.find_all('p'):
+		for text in res.find_all(['p', "li", "span", "div"]):
 			for term in search_terms:
 				if term.lower() in text.get_text().lower():
 					alert_count[search_terms.index(term)] = alert_count[search_terms.index(term)] + 1
