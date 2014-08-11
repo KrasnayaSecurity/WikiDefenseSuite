@@ -44,6 +44,7 @@ links = msanititize(links)
 all_links = []
 all_links.append(links)
 alert_count = [0] * len(search_terms)
+total_count = [0] * len(search_terms)
 hasAlert = False
 runs = 0
 
@@ -64,11 +65,17 @@ for cycle in all_links:
 			for term in search_terms:
 				if term.lower() in text.get_text().lower():
 					alert_count[search_terms.index(term)] = alert_count[search_terms.index(term)] + 1
+					total_count[search_terms.index(term)] = total_count[search_terms.index(term)] + 1
 		file = open("WikiCrawl_log.txt", 'a')
 		file.write("\n\n"+ link +"\n")
 		for term in search_terms:
 			print ""+ term +" count = "+ str(alert_count[search_terms.index(term)])
 			file.write(""+ term +" count = "+ str(alert_count[search_terms.index(term)]) +"\n")
+		print "\n"
+		file.write("\n")
+		for term in search_terms:
+			print "Total "+ term +" count = "+ str(total_count[search_terms.index(term)])
+			file.write("Total "+ term +" count = "+ str(total_count[search_terms.index(term)]) +"\n")
 		for text in res.find_all('p'):
 			for term in search_terms:
 				if term.lower() in text.get_text().lower():
