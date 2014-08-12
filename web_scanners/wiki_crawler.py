@@ -11,7 +11,8 @@ domain = "rationalwiki.org"
 entry = "RationalWiki:Saloon_bar"
 search_terms = ["nazi","ehrenstein","rape","arcane","dondrekhan"]
 require = ""
-exclude = "archive"
+exclude = " "
+repeat_pages = False
 
 #####################################
 
@@ -35,6 +36,11 @@ def msanititize(l_list):
 			n_list.append(link)
 	return n_list
 
+def check_repeat(review):
+	if review == False:
+		if link in all_links:
+			continue
+
 req = web_r("/wiki/"+ entry)
 res = req.text
 res = BeautifulSoup(res)
@@ -51,6 +57,7 @@ runs = 0
 for cycle in all_links:
 	links = all_links[runs]
 	for link in links:
+		check_repeat(repeat_pages)
 		req = web_r(link)
 		res = req.text
 		res = BeautifulSoup(res)
@@ -59,7 +66,7 @@ for cycle in all_links:
 		links = get_links(res)
 		links = msanititize(links)
 		all_links.append(links)
-		for text in res.find_all(id="content"):
+		for text in res.find_all(['p',"li","span","div"]):
 			print ""+ text.get_text() +"\n"
 		for text in res.find_all(['p', "li", "span", "div"]):
 			for term in search_terms:
@@ -76,7 +83,7 @@ for cycle in all_links:
 		for term in search_terms:
 			print "Total "+ term +" count = "+ str(total_count[search_terms.index(term)])
 			file.write("Total "+ term +" count = "+ str(total_count[search_terms.index(term)]) +"\n")
-		for text in res.find_all('p'):
+		for text in res.find_all(['p',["li","span","div"]):
 			for term in search_terms:
 				if term.lower() in text.get_text().lower():
 					hasAlert = True
