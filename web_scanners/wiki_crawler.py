@@ -36,11 +36,6 @@ def msanititize(l_list):
 			n_list.append(link)
 	return n_list
 
-def check_repeat(review):
-	if review == False:
-		if link in all_links:
-			continue
-
 req = web_r("/wiki/"+ entry)
 res = req.text
 res = BeautifulSoup(res)
@@ -57,7 +52,14 @@ runs = 0
 for cycle in all_links:
 	links = all_links[runs]
 	for link in links:
-		check_repeat(repeat_pages)
+		if repeat_pages == False:
+			for list in all_links:
+				if link in list:
+					print ""+ link +" was repeated and has been skipped."
+					file = open("WikiCrawl_log.txt", 'a')
+					file.write("\n"+ link +" was repeated and has been skipped.\n")
+					file.close()
+					continue
 		req = web_r(link)
 		res = req.text
 		res = BeautifulSoup(res)
@@ -66,7 +68,7 @@ for cycle in all_links:
 		links = get_links(res)
 		links = msanititize(links)
 		all_links.append(links)
-		for text in res.find_all(['p',"li","span","div"]):
+		for text in res.find_all(['p']):
 			print ""+ text.get_text() +"\n"
 		for text in res.find_all(['p', "li", "span", "div"]):
 			for term in search_terms:
@@ -83,7 +85,7 @@ for cycle in all_links:
 		for term in search_terms:
 			print "Total "+ term +" count = "+ str(total_count[search_terms.index(term)])
 			file.write("Total "+ term +" count = "+ str(total_count[search_terms.index(term)]) +"\n")
-		for text in res.find_all(['p',["li","span","div"]):
+		for text in res.find_all(['p',"li","span","div"]):
 			for term in search_terms:
 				if term.lower() in text.get_text().lower():
 					hasAlert = True
