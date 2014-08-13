@@ -103,7 +103,7 @@ for cycle in all_links:
 					if c_link in l_list:
 						l_list.remove(l_list[l_list.index(c_link)])
 		crawled_links.append(link)
-		#time.sleep(0.25)
+		time.sleep(0.25)
 	runs = runs + 1
 	time.sleep(0.25)
 print "\n\nNo more links recieved.  Program terminated."
