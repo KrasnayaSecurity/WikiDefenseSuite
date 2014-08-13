@@ -48,18 +48,18 @@ alert_count = [0] * len(search_terms)
 total_count = [0] * len(search_terms)
 hasAlert = False
 runs = 0
+crawled_links = []
 
 for cycle in all_links:
 	links = all_links[runs]
 	for link in links:
 		if repeat_pages == False:
-			for list in all_links:
-				if link in list:
-					print ""+ link +" was repeated and has been skipped."
-					file = open("WikiCrawl_log.txt", 'a')
-					file.write("\n"+ link +" was repeated and has been skipped.\n")
-					file.close()
-					continue
+			if link in crawled_links:
+				print ""+ link +" was repeated and has been skipped."
+				file = open("WikiCrawl_log.txt", 'a')
+				file.write("\n"+ link +" was repeated and has been skipped.\n")
+				file.close()
+				continue
 		req = web_r(link)
 		res = req.text
 		res = BeautifulSoup(res)
@@ -97,8 +97,14 @@ for cycle in all_links:
 		for i in alert_count:
 			alert_count[alert_count.index(i)] = 0
 		hasAlert = False
-		time.sleep(1)
+		if repeat_pages == False:
+			for c_link in crawled_links:
+				for l_list in all_links:
+					if c_link in l_list:
+						l_list.remove(l_list[l_list.index(c_link)])
+		crawled_links.append(link)
+		#time.sleep(0.25)
 	runs = runs + 1
-	time.sleep(1)
-
+	time.sleep(0.25)
+print "\n\nNo more links recieved.  Program terminated."
 
